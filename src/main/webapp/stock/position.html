@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>货位管理</title>
+    <link rel="stylesheet" type="text/css" href="/static/jquery-easyui-1.3.3/themes/default/easyui.css"></link>
+    <link rel="stylesheet" type="text/css" href="/static/jquery-easyui-1.3.3/themes/icon.css"></link>
+    <script type="text/javascript" src="/static/jquery-easyui-1.3.3/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/jquery-easyui-1.3.3/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/static/jquery-easyui-1.3.3/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript">
+
+        var url;
+
+        $(document).ready(function () {
+
+            $("#tree").tree({
+                lines: true,
+                url: '/admin/goodsType/loadTreeInfo',
+                onLoadSuccess: function () {
+                    $("#tree").tree("expandAll");
+                },
+                onClick: function (node) {
+                    if (node.attributes.state == 0) { // 假如是叶子节点，删除按钮恢复可用
+                        $("#del").linkbutton("enable");
+                    } else {
+                        $("#del").linkbutton("disable");
+                    }
+                    $("#dg").datagrid('load', {
+                        "name": $("#s_name").val(),
+                        "type.id": node.id
+                    });
+                }
+            });
+
+        });
+
+        function openGoodsTypeAddDialog() {
+            $("#dlg").dialog("open").dialog("setTitle", "新增商品类别");
+        }
+
+        function deleteGoodsType() {
+            var node = $("#tree").tree("getSelected"); // 获取选中节点
+            var id = node.id;
+            $.post("/admin/goodsType/delete", {id: id}, function (result) {
+                if (result.success) {
+                    $("#tree").tree("reload");
+                    $("#del").linkbutton("disable");
+                } else {
+                    $.messager.alert("系统提示", result.errorInfo);
+                }
+            }, "json");
+        }
+
+        function saveGoodsType() {
+            if (!$("#fm").form("validate")) {
+                return;
+            }
+            var goodsTypeName = $('#goodsTypeName').val();
+            var node = $("#tree").tree("getSelected"); // 获取选中节点
+            var parentId;
+            if (node == null) {
+                parentId = 1;
+            } else {
+                parentId = node.id;
+            }
+            $.post("/admin/goodsType/save", {name: goodsTypeName, parentId: parentId}, function (result) {
+                if (result.success) {
+                    $("#tree").tree("reload");
+                    closeGoodsTypeDialog();
+                } else {
+                    $.messager.alert("系统提示", "提交失败，请联系管理员！");
+                }
+            }, "json");
+        }
+
+        function closeGoodsTypeDialog() {
+            $("#dlg").dialog("close");
+            $('#goodsTypeName').val('');
+        }
+
+
+
+        function searchPosition() {
+            $("#dg").datagrid('load', {
+                "name": $("#s_name").val()
+            });
+        }
+
+        function openPositionAddDialog() {
+            $("#dlg2").dialog("open").dialog("setTitle", "添加货位信息");
+            url = "/admin/position/save";
+            var node = $("#tree").tree("getSelected");
+            if (node != null && node.id != 1) {
+                $("#typeId").val(node.id);
+                $("#typeName").val(node.text);
+            } else {
+                $("#typeId").val("");
+                $("#typeName").val("");
+            }
+            $("#saveAddAddNextButton").show();
+        }
+
+        function openChooseGoodsTypeDialog() {
+            $("#dlg3").dialog("open").dialog("setTitle", "选择商品类别");
+            $("#typeTree").tree({
+                url: '/admin/goodsType/loadTreeInfo',
+                onLoadSuccess: function () {
+                    var rootNode = $("#typeTree").tree("getRoot");
+                    $("#typeTree").tree("expand", rootNode.target);
+                }
+            });
+        }
+
+        function resetValue() {
+            $("#typeId").val("");
+            $("#typeName").val("");
+            $("#code").val("");
+            $("#name").val("");
+        }
+
+        function saveGoodsTypeChoose() {
+            var node = $("#typeTree").tree("getSelected");
+            if (node != null && node.id != 1) {
+                $("#typeId").val(node.id);
+                $("#typeName").val(node.text);
+            }
+            $("#dlg3").dialog("close");
+        }
+
+        function closeGoodsTypeChooseDialog() {
+            $("#dlg3").dialog("close");
+        }
+
+        function savePosition(type) {
+            $("#fm2").form("submit", {
+                url: url,
+                onSubmit: function () {
+                    return $(this).form("validate");
+                },
+                success: function (result) {
+                    var result = eval('(' + result + ')');
+                    if (result.success) {
+                        $.messager.alert("系统提示", "保存成功！");
+                        resetValue();
+                        if (type == 1) {
+                            $("#dlg2").dialog("close");
+                        } else if (type == 2) {
+                            var node = $("#tree").tree("getSelected");
+                            if (node != null && node.id != 1) {
+                                $("#typeId").val(node.id);
+                                $("#typeName").val(node.text);
+                            } else {
+                                $("#typeId").val("");
+                                $("#typeName").val("");
+                            }
+                        }
+                        $("#dg").datagrid("reload");
+                    } else {
+                        $.messager.alert("系统提示", result.errorInfo);
+                    }
+                }
+            });
+        }
+
+        function closePositionDialog() {
+            resetValue();
+            $("#dlg2").dialog("close");
+        }
+
+        function openPositionModifyDialog() {
+            var selectedRows = $("#dg").datagrid("getSelections");
+            if (selectedRows.length != 1) {
+                $.messager.alert("系统提示", "请选择一条要修改的数据！");
+                return;
+            }
+            var row = selectedRows[0];
+            $("#dlg2").dialog("open").dialog("setTitle", "修改商品信息");
+            $("#fm2").form("load", row);
+            $("#typeId").val(row.type.id);
+            $("#typeName").val(row.type.name);
+            url = "/admin/position/save?id=" + row.id;
+            $("#saveAddAddNextButton").hide();
+        }
+
+        function deletePosition() {
+            var selectedRows = $("#dg").datagrid("getSelections");
+            if (selectedRows.length != 1) {
+                $.messager.alert("系统提示", "请选择一条要删除的数据！");
+                return;
+            }
+            var id = selectedRows[0].id;
+            $.messager.confirm("系统提示", "您确定要删除这条数据吗?", function (r) {
+                if (r) {
+                    $.post("/admin/position/delete", {id: id}, function (result) {
+                        if (result.success) {
+                            $.messager.alert("系统提示", "数据已成功删除！");
+                            $("#dg").datagrid("reload");
+                        } else {
+                            $.messager.alert("系统提示", "<font color=red>" + result.errorInfo + "</font>");
+                        }
+                    }, "json");
+                }
+            });
+        }
+
+        $(document).ready(function () {
+
+            $("#dg4").datagrid({
+                onDblClickRow: function (index, row) {
+                    var name = row.name;
+                    $("#unit").combobox("reload");
+                    $("#unit").combobox("setValue", name);
+                    $("#dlg4").dialog("close");
+                }
+            });
+
+            $("#dg").datagrid({
+                onDblClickRow: function (index, row) {
+                    $("#dlg2").dialog("open").dialog("setTitle", "修改货位信息");
+                    $("#fm2").form("load", row);
+                    $("#typeId").val(row.type.id);
+                    $("#typeName").val(row.type.name);
+                    url = "/admin/position/save?id=" + row.id;
+                    $("#saveAddAddNextButton").hide();
+                }
+            });
+
+        });
+
+    </script>
+</head>
+<body class="easyui-layout" style="padding-top: 2px">
+<div data-options="region:'west',collapsible:false" style="width: 200px" title="商品类别" split=true>
+    <ul id="tree" class="easyui-tree" style="padding: 10px"></ul>
+    <div style="position: absolute;bottom: 10px;left: 15px">
+        <a href="javascript:openGoodsTypeAddDialog()" class="easyui-linkbutton" iconCls="icon-add">新增</a>
+        <a id="del" href="javascript:deleteGoodsType()" class="easyui-linkbutton" disabled=true
+           iconCls="icon-remove">删除</a>
+    </div>
+</div>
+<div data-options="region:'center'">
+    <table id="dg" title="货位管理" class="easyui-datagrid"
+           fitColumns="true" pagination="true" rownumbers="true" singleSelect="true"
+           url="/admin/position/list" fit="true" toolbar="#tb">
+        <thead>
+        <th field="id" width="30" align="center">编号</th>
+        <th field="code" width="50" align="center">货位编码</th>
+        <th field="name" width="150" align="center">货位名称</th>
+        </thead>
+    </table>
+
+    <div id="tb">
+        <div>
+            <a href="javascript:openPositionAddDialog()" class="easyui-linkbutton" iconCls="icon-add" plain="true">添加</a>
+            <a href="javascript:openPositionModifyDialog()" class="easyui-linkbutton" iconCls="icon-edit"
+               plain="true">修改</a>
+            <a href="javascript:deletePosition()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
+        </div>
+        <div>
+            &nbsp;货位编码：&nbsp;<input type="text" id="s_name" size="20" onkeydown="if(event.keyCode==13) searchGoods()"/>
+            <a href="javascript:searchPosition()" class="easyui-linkbutton" iconCls="icon-search" plain="true">搜索</a>
+        </div>
+    </div>
+</div>
+
+<div id="dlg2" class="easyui-dialog" style="width: 500px;height: 400px;padding: 10px 20px"
+     closed="true" buttons="#dlg-buttons2" data-options="onClose:function(){resetValue()}">
+    <form id="fm2" method="post">
+        <table>
+            <tr>
+                <td>所属类别：</td>
+                <td>
+                    <input type="hidden" id="typeId" name="type.id">
+                    <input type="text" id="typeName" class="easyui-validatebox" required="true" style="width: 90px"
+                           readonly="readonly" onclick="openChooseGoodsTypeDialog()"/>
+                    <a href="javascript:openChooseGoodsTypeDialog()" class="easyui-linkbutton" iconCls="icon-search"
+                       plain="true"></a>
+                </td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td>货位编码：</td>
+                <td>
+                    <input type="text" id="code" name="code" class="easyui-validatebox" required="true"
+                           style="width: 120px" readonly="readonly"/>
+                </td>
+            </tr>
+            <tr>
+                <td>货位名称：</td>
+                <td colspan="4">
+                    <input type="text" id="name" name="name" class="easyui-validatebox" required="true"
+                           style="width: 340px;"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<div id="dlg-buttons2">
+    <a id="saveAddAddNextButton" href="javascript:savePosition(2)" class="easyui-linkbutton"
+       iconCls="icon-ok">保存并新增下一货位</a>
+    <a href="javascript:savePosition(1)" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+    <a href="javascript:closePositionDialog()" class="easyui-linkbutton" iconCls="icon-cancel">关闭</a>
+</div>
+
+<div id="dlg3" class="easyui-dialog" style="width: 180px;height: 300px;padding: 10px 10px"
+     closed="true" buttons="#dlg-buttons3">
+    <ul id="typeTree" class="easyui-tree"></ul>
+</div>
+
+<div id="dlg-buttons3">
+    <a href="javascript:saveGoodsTypeChoose()" class="easyui-linkbutton" iconCls="icon-ok" plain="true">选择</a>
+    <a href="javascript:closeGoodsTypeChooseDialog()" class="easyui-linkbutton" iconCls="icon-cancel"
+       plain="true">关闭</a>
+</div>
+</body>
+</html>
