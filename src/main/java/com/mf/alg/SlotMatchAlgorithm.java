@@ -48,4 +48,16 @@ public class SlotMatchAlgorithm {
             accessed[i] = false;
         }
     }
+
+    public static void main(String[] args) {
+        int[][] temp = {{0, 0, 0, 0, 1, 0, 1, 0},
+                {0, 0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 1, 1, 0, 0},
+                {0, 0, 0, 0, 0, 0, 1, 1},
+                {1, 1, 1, 0, 0, 0, 0, 0},
+                {0, 0, 1, 0, 0, 0, 0, 0},
+                {1, 0, 0, 1, 0, 0, 0, 0},
+                {0, 0, 0, 1, 0, 0, 0, 0}};
+        new SlotMatchAlgorithm(temp).search();
+    }
 }
