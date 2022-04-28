@@ -30,6 +30,12 @@ public class PositionServiceImpl implements PositionService {
     }
 
     @Override
+    public Position findByIndex(int index) {
+        return positionRepository.findByIndex(index);
+    }
+
+
+    @Override
     public List<Position> list(Position position, Integer page, Integer pageSize, Sort.Direction direction, String... properties) {
         Pageable pageable = new PageRequest(page - 1, pageSize);
         Page<Position> pageGoods = positionRepository.findAll(new Specification<Position>() {

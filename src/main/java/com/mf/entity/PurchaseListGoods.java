@@ -1,13 +1,6 @@
 package com.mf.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -41,6 +34,13 @@ public class PurchaseListGoods {
 	@ManyToOne
 	@JoinColumn(name="typeId")
 	private GoodsType type; // 商品类别
+
+	@OneToOne
+	@JoinColumn(name="positionId")
+	private Position position; // 货位号
+
+	private Integer positionIndex;
+
 	
 	@Transient
 	private Integer typeId; // 类别id
@@ -163,6 +163,22 @@ public class PurchaseListGoods {
 
 	public void setCodeOrName(String codeOrName) {
 		this.codeOrName = codeOrName;
+	}
+
+	public Position getPosition() {
+		return position;
+	}
+
+	public void setPosition(Position position) {
+		this.position = position;
+	}
+
+	public Integer getPositionIndex() {
+		return positionIndex;
+	}
+
+	public void setPositionIndex(Integer positionIndex) {
+		this.positionIndex = positionIndex;
 	}
 
 	@Override

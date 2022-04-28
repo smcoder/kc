@@ -245,18 +245,20 @@
            url="/admin/position/list" fit="true" toolbar="#tb">
         <thead>
         <th field="id" width="30" align="center">编号</th>
+        <th field="index" width="50" align="center">排列</th>
         <th field="code" width="50" align="center">货位编码</th>
         <th field="name" width="150" align="center">货位名称</th>
+        <th field="total" width="150" align="center">货格数(1-100)</th>
         </thead>
     </table>
 
     <div id="tb">
-        <div>
-            <a href="javascript:openPositionAddDialog()" class="easyui-linkbutton" iconCls="icon-add" plain="true">添加</a>
-            <a href="javascript:openPositionModifyDialog()" class="easyui-linkbutton" iconCls="icon-edit"
-               plain="true">修改</a>
-            <a href="javascript:deletePosition()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
-        </div>
+<!--        <div>-->
+<!--            <a href="javascript:openPositionAddDialog()" class="easyui-linkbutton" iconCls="icon-add" plain="true">添加</a>-->
+<!--            <a href="javascript:openPositionModifyDialog()" class="easyui-linkbutton" iconCls="icon-edit"-->
+<!--               plain="true">修改</a>-->
+<!--            <a href="javascript:deletePosition()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>-->
+<!--        </div>-->
         <div>
             &nbsp;货位编码：&nbsp;<input type="text" id="s_name" size="20" onkeydown="if(event.keyCode==13) searchGoods()"/>
             <a href="javascript:searchPosition()" class="easyui-linkbutton" iconCls="icon-search" plain="true">搜索</a>

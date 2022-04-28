@@ -18,6 +18,8 @@ public interface PositionService {
 	 * @return
 	 */
 	public List<Position> findByTypeId(int typeId);
+
+	Position findByIndex(int index);
 	
 	/**
 	 * 根据条件分页查询货位信息

@@ -32,4 +32,8 @@ public interface PurchaseListGoodsRepository extends JpaRepository<PurchaseListG
 	@Query(value="delete FROM t_purchase_list_goods WHERE purchase_list_id=?1",nativeQuery=true)
 	@Modifying
 	public void deleteByPurchaseListId(Integer purchaseListId);
+
+
+	@Query(value = "select * from t_purchase_list_goods where position_id = ?1 and position_index = ?2", nativeQuery = true)
+	PurchaseListGoods fetchCorrect(Integer positionId, Integer index);
 }

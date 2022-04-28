@@ -10,6 +10,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
+import com.mf.service.AutoSelectPositionService;
+import com.mf.service.PositionService;
+import com.mf.vo.PositionSelect;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
@@ -46,6 +49,12 @@ public class PurchaseListServiceImpl implements PurchaseListService{
 	@Resource
 	private PurchaseListGoodsRepository purchaseListGoodsRepository;
 
+	@Resource
+	private PositionService positionService;
+
+	@Resource
+	private AutoSelectPositionService autoSelectPositionService;
+
 	@Override
 	public String getTodayMaxPurchaseNumber() {
 		return purchaseListRepository.getTodayMaxPurchaseNumber();
@@ -56,6 +65,12 @@ public class PurchaseListServiceImpl implements PurchaseListService{
 		for(PurchaseListGoods purchaseListGoods:purchaseListGoodsList){
 			purchaseListGoods.setType(goodsTypeRepository.findOne(purchaseListGoods.getTypeId())); // 设置类别
 			purchaseListGoods.setPurchaseList(purchaseList); // 设置进货单
+			// 自动选择货位号
+			PositionSelect positionSelect = autoSelectPositionService.autoSelect(purchaseListGoods.getGoodsId());
+			if (null != positionSelect) {
+				purchaseListGoods.setPosition(positionService.findById(positionSelect.getPositionId()));
+				purchaseListGoods.setPositionIndex(positionSelect.getPositionIndex());
+			}
 			purchaseListGoodsRepository.save(purchaseListGoods);
 			// 修改商品库存 成本均价 以及上次进价
 			Goods goods=goodsRepository.findOne(purchaseListGoods.getGoodsId());

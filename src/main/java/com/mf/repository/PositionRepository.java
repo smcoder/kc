@@ -25,6 +25,10 @@ public interface PositionRepository extends JpaRepository<Position, Integer>, Jp
     @Query(value = "select * from t_position where type_id=?1", nativeQuery = true)
     public List<Position> findByTypeId(int typeId);
 
+
+    @Query(value = "select * from t_position where index=?1", nativeQuery = true)
+    public Position findByIndex(int index);
+
     /**
      * 获取最大的货位编码
      *

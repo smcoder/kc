@@ -14,6 +14,10 @@ public class Position {
 	@Id
 	@GeneratedValue
 	private Integer id; // 编号
+
+	private Integer total;
+
+	private Integer index;
 	
 	@Column(length=50)
 	private String code; // 商品编码
@@ -31,6 +35,23 @@ public class Position {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+
+	public Integer getTotal() {
+		return total;
+	}
+
+	public void setTotal(Integer total) {
+		this.total = total;
+	}
+
+	public Integer getIndex() {
+		return index;
+	}
+
+	public void setIndex(Integer index) {
+		this.index = index;
 	}
 
 	public String getCode() {
