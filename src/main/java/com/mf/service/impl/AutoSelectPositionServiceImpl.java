@@ -23,7 +23,6 @@ public class AutoSelectPositionServiceImpl implements AutoSelectPositionService 
 
     @Override
     public PositionSelect autoSelect(Integer goodsId) {
-        SlotMatchAlgorithm.initMatrix();
         List<PositionSelect> positionSelectList = SlotMatchAlgorithm.hunter(false);
         return iterator(positionSelectList);
     }

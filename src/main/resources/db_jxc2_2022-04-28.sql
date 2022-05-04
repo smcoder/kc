@@ -441,7 +441,7 @@ VALUES
 	(3010,'menu-31','商品报损',30,0,'/stock/damage.html'),
 	(3020,'menu-32','商品报溢',30,0,'/stock/overflow.html'),
 	(3030,'menu-33','库存报警',30,0,'/stock/alarm.html'),
-	(3040,'menu-34','报损报溢查询',30,0,'/stock/damageOverflowSearch.html'),
+	(3040,'menu-34','报损查询',30,0,'/stock/damageOverflowSearch.html'),
 	(3050,'menu-35','当前库存查询',30,0,'/common/stockSearch.html'),
 	(4010,'menu-41','供应商统计',40,0,'/count/supplier.html'),
 	(4020,'menu-42','客户统计',40,0,'/count/customer.html'),
@@ -1050,6 +1050,22 @@ VALUES
 	(47,9,7),
 	(53,9,8);
 
+delete from t_menu where name = '销售管理';
+delete from t_menu where p_id = 20;
+delete from t_menu where name = '商品报溢';
+delete from t_menu where id = 4040;
+delete from t_menu where id = 4060;
+update t_menu set name = '报损查询' where name = '报损报溢查询';
+
+delete from t_role_menu where menu_id = 20;
+delete from t_role_menu where menu_id = 2010;
+delete from t_role_menu where menu_id = 2020;
+delete from t_role_menu where menu_id = 2030;
+delete from t_role_menu where menu_id = 2040;
+delete from t_role_menu where menu_id = 2050;
+delete from t_role_menu where menu_id = 3020;
+delete from t_role_menu where menu_id = 4040;
+delete from t_role_menu where menu_id = 4060;
 /*!40000 ALTER TABLE `t_user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 

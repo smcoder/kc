@@ -103,7 +103,7 @@ public class OverflowListAdminController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/list")
-	@RequiresPermissions(value="报损报溢查询")
+	@RequiresPermissions(value="报损查询")
 	public Map<String,Object> list(OverflowList overflowList)throws Exception{
 		Map<String,Object> resultMap=new HashMap<>();
 		List<OverflowList> overflowListList=overflowListService.list(overflowList, Direction.DESC, "overflowDate");
@@ -119,7 +119,7 @@ public class OverflowListAdminController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/listGoods")
-	@RequiresPermissions(value="报损报溢查询")
+	@RequiresPermissions(value="报损查询")
 	public Map<String,Object> listGoods(Integer overflowListId)throws Exception{
 		if(overflowListId==null){
 			return null;
