@@ -9,7 +9,7 @@ import java.util.*;
 public class SlotMatchAlgorithm {
 
     //define Max 100
-    public static int max = 100;
+    public static int max = 99;
     public static int n;                    //维数
     public static int[][] s = new int[max][max];        //原始矩阵
     public static int[][] p = new int[max][max];        //归约矩阵

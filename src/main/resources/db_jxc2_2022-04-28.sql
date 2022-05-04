@@ -540,7 +540,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `t_position`;
 
 CREATE TABLE `t_position` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `code` varchar(200) DEFAULT NULL,
   `name` varchar(200) DEFAULT NULL,
   `type_id` int DEFAULT NULL,

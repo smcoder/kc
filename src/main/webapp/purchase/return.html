@@ -171,11 +171,16 @@
 		if(!$("#fm4").form("validate")){
 			return;
 		}
+		var num=$("#num").numberbox("getValue");
+		var selectedRows=$("#dg2").datagrid("getSelections");
+		var row=selectedRows[0];
+		if (row.inventoryQuantity <= 0 || num > row.inventoryQuantity) {
+			$.messager.alert("系统提示", "出库数量不能不能大于既有库存数量且不能小于1");
+			return;
+		}
 		if(action=="add"){
-			var selectedRows=$("#dg2").datagrid("getSelections");
-			var row=selectedRows[0];
 			var price=$("#price").numberbox("getValue");
-			var num=$("#num").numberbox("getValue");
+
 			var total=price*num;
 			$("#dg").datagrid("appendRow",{
 				code:row.code,

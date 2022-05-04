@@ -26,7 +26,7 @@ public interface PositionRepository extends JpaRepository<Position, Integer>, Jp
     public List<Position> findByTypeId(int typeId);
 
 
-    @Query(value = "select * from t_position where index=?1", nativeQuery = true)
+    @Query(value = "select * from t_position where `index`=?1", nativeQuery = true)
     public Position findByIndex(int index);
 
     /**
