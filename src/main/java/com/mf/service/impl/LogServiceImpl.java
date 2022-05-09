@@ -43,6 +43,8 @@ public class LogServiceImpl implements LogService{
 		log.setTime(new Date()); // 设置操作日期
 		log.setUser(userRepository.findByUserName((String) SecurityUtils.getSubject().getPrincipal())); // 设置当前用户
 		logRepository.save(log);
+
+
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.mf.alg;
 
+import com.mf.entity.Goods;
 import com.mf.vo.PositionSelect;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -9,7 +10,7 @@ import java.util.*;
 public class SlotMatchAlgorithm {
 
     //define Max 100
-    public static int max = 99;
+    public static int max = 100;
     public static int n;                    //维数
     public static int[][] s = new int[max][max];        //原始矩阵
     public static int[][] p = new int[max][max];        //归约矩阵
@@ -24,13 +25,12 @@ public class SlotMatchAlgorithm {
     //在规约矩阵里面0是0
     //-1φ,-2是◎(独立零元素)
     //三做完后如果返回可能要回退栈内的元素
-    public static void initMatrix() {
-        n = 99;
+    public static void initMatrix(List<Goods> goodsList) {
         Random random = new Random();
-
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++) {
-                s[i][j] = random.nextInt(n);
+//                s[i][j] = random.nextInt(n);
+                s[i][j] = (int)goodsList.get(i).getPurchasingPrice();
                 p[i][j] = s[i][j];
             }
         //第一步：变出零来

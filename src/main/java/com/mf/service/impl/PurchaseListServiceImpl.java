@@ -65,12 +65,16 @@ public class PurchaseListServiceImpl implements PurchaseListService{
 		for(PurchaseListGoods purchaseListGoods:purchaseListGoodsList){
 			purchaseListGoods.setType(goodsTypeRepository.findOne(purchaseListGoods.getTypeId())); // 设置类别
 			purchaseListGoods.setPurchaseList(purchaseList); // 设置进货单
-			// 自动选择货位号
-			PositionSelect positionSelect = autoSelectPositionService.autoSelect(purchaseListGoods.getGoodsId());
-			if (null != positionSelect) {
-				purchaseListGoods.setPosition(positionService.findById(positionSelect.getPositionId()));
-				purchaseListGoods.setPositionIndex(positionSelect.getPositionIndex());
-			}
+//			try {
+//				// 自动选择货位号
+//				PositionSelect positionSelect = autoSelectPositionService.autoSelect(purchaseListGoods.getGoodsId());
+//				if (null != positionSelect) {
+//					purchaseListGoods.setPosition(positionService.findById(positionSelect.getPositionId()));
+//					purchaseListGoods.setPositionIndex(positionSelect.getPositionIndex());
+//				}
+//			} catch (Exception e) {
+//
+//			}
 			purchaseListGoodsRepository.save(purchaseListGoods);
 			// 修改商品库存 成本均价 以及上次进价
 			Goods goods=goodsRepository.findOne(purchaseListGoods.getGoodsId());

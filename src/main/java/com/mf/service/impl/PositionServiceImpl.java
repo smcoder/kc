@@ -24,10 +24,6 @@ public class PositionServiceImpl implements PositionService {
     @Resource
     private PositionRepository positionRepository;
 
-    @Override
-    public List<Position> findByTypeId(int typeId) {
-        return positionRepository.findByTypeId(typeId);
-    }
 
     @Override
     public Position findByIndex(int index) {
@@ -46,9 +42,6 @@ public class PositionServiceImpl implements PositionService {
                 if (position != null) {
                     if (StringUtil.isNotEmpty(position.getName())) {
                         predicate.getExpressions().add(cb.like(root.get("name"), "%" + position.getName() + "%"));
-                    }
-                    if (position.getType() != null && position.getType().getId() != null && position.getType().getId() != 1) {
-                        predicate.getExpressions().add(cb.equal(root.get("type").get("id"), position.getType().getId()));
                     }
 //                    if (StringUtil.isNotEmpty(position.getCodeOrName())) {
 //                        predicate.getExpressions().add(cb.or(cb.like(root.get("code"), "%" + position.getCodeOrName() + "%"), cb.like(root.get("name"), "%" + goods.getCodeOrName() + "%")));
@@ -70,9 +63,6 @@ public class PositionServiceImpl implements PositionService {
                 if (position != null) {
                     if (StringUtil.isNotEmpty(position.getName())) {
                         predicate.getExpressions().add(cb.like(root.get("name"), "%" + position.getName() + "%"));
-                    }
-                    if (position.getType() != null && position.getType().getId() != null && position.getType().getId() != 1) {
-                        predicate.getExpressions().add(cb.equal(root.get("type").get("id"), position.getType().getId()));
                     }
 //                    if (StringUtil.isNotEmpty(goods.getCodeOrName())) {
 //                        predicate.getExpressions().add(cb.or(cb.like(root.get("code"), "%" + goods.getCodeOrName() + "%"), cb.like(root.get("name"), "%" + goods.getCodeOrName() + "%")));

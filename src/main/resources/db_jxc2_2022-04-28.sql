@@ -458,7 +458,7 @@ VALUES
 	(6030,'menu-65','系统日志',60,0,'/power/log.html'),
 	(6040,'menu-63','修改密码',60,0,NULL),
 	(6050,'menu-64','安全退出',60,0,NULL),
-	(6051,'menu-100','货位管理',30,0,'/stock/position.html');
+	(6053,'menu-100','货位管理',10,0,'/purchase/position.html');
 
 /*!40000 ALTER TABLE `t_menu` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1066,6 +1066,11 @@ delete from t_role_menu where menu_id = 2050;
 delete from t_role_menu where menu_id = 3020;
 delete from t_role_menu where menu_id = 4040;
 delete from t_role_menu where menu_id = 4060;
+
+insert into t_menu(icon, name, p_id, state, url) values('menu-100', '货位管理', 10, 0, '/purchase/position.html');
+
+delete from t_role_menu where menu_id = 6052;
+delete from t_menu where id = 6052;
 /*!40000 ALTER TABLE `t_user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 

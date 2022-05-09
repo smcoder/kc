@@ -16,15 +16,6 @@ import java.util.List;
 public interface PositionRepository extends JpaRepository<Position, Integer>, JpaSpecificationExecutor<Position> {
 
 
-    /**
-     * 查询某个类别下的所有货位
-     *
-     * @param typeId
-     * @return
-     */
-    @Query(value = "select * from t_position where type_id=?1", nativeQuery = true)
-    public List<Position> findByTypeId(int typeId);
-
 
     @Query(value = "select * from t_position where `index`=?1", nativeQuery = true)
     public Position findByIndex(int index);
@@ -37,11 +28,4 @@ public interface PositionRepository extends JpaRepository<Position, Integer>, Jp
     @Query(value = "SELECT MAX(CODE) FROM t_position", nativeQuery = true)
     public String getMaxPositionCode();
 
-    /**
-     * 查询库存报警商品，实际库存小于库存下限的商品
-     *
-     * @return
-     */
-    @Query(value = "SELECT * FROM t_position WHERE inventory_quantity<min_num", nativeQuery = true)
-    public List<Position> listAlarm();
 }

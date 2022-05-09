@@ -104,4 +104,6 @@ public interface GoodsService {
 	 * @return
 	 */
 	public List<Goods> listAlarm();
+
+	public List<Goods> all(int limit);
 }

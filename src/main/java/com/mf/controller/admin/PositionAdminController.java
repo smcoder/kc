@@ -1,16 +1,26 @@
 package com.mf.controller.admin;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.mf.alg.SlotMatchAlgorithm;
+import com.mf.entity.Goods;
 import com.mf.entity.Log;
 import com.mf.entity.Position;
 import com.mf.service.*;
+import com.mf.vo.PositionSelect;
+import com.mf.vo.PositionTable;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +39,12 @@ public class PositionAdminController {
 
     @Resource
     private LogService logService;
+
+    @Resource
+    private GoodsService goodsService;
+
+    @Resource
+    private AutoSelectPositionService autoSelectPositionService;
 
     /**
      * 分页查询商品信息
@@ -49,6 +65,42 @@ public class PositionAdminController {
         resultMap.put("total", total);
         logService.save(new Log(Log.SEARCH_ACTION, "查询货位信息"));
         return resultMap;
+    }
+
+    @RequestMapping("/generate/{num}")
+    @RequiresPermissions(value = {"货位管理"})
+    public JSONArray generate(@PathVariable Integer num) {
+        List<Goods> goodsList = goodsService.all(num * num);
+        String value = "[";
+        for (int n = 1; n <= num; n++) {
+            value += "{";
+            for (int i = 1; i <= num; i++) {
+                value += "'" + i;
+                value += "':";
+                if (n * 1 > goodsList.size()) {
+                    value += "0,";
+                } else {
+                    value += goodsList.get(n * i) + ",";
+                }
+            }
+            value = value.substring(0, value.length() - 1);
+            value += "},";
+        }
+        String refactor = value.substring(0, value.length() - 1);
+        refactor += "]";
+        return JSON.parseArray(refactor);
+    }
+
+    @RequestMapping( "/calculate/{num}")
+    public Integer calculate(@PathVariable Integer num) {
+        List<Goods> goodsList = goodsService.all(num);
+        SlotMatchAlgorithm.n = goodsList.size();
+        SlotMatchAlgorithm.initMatrix(goodsList);
+        List<PositionSelect> list = autoSelectPositionService.autoSelect(null);
+        if (null != list && list.size() > 0) {
+            return list.stream().mapToInt(item -> item.getPositionIndex()).sum();
+        }
+        return 0;
     }
 
 

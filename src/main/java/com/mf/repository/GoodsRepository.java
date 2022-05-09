@@ -37,4 +37,7 @@ public interface GoodsRepository extends JpaRepository<Goods, Integer>,JpaSpecif
 	 */
 	@Query(value="SELECT * FROM t_goods WHERE inventory_quantity<min_num",nativeQuery=true)
 	public List<Goods> listAlarm();
+
+	@Query(value= "select * from t_goods order by inventory_quantity desc limit ?1", nativeQuery = true)
+	public List<Goods> all(int num);
 }

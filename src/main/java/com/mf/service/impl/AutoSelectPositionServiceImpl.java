@@ -22,9 +22,9 @@ public class AutoSelectPositionServiceImpl implements AutoSelectPositionService 
     private PositionService positionService;
 
     @Override
-    public PositionSelect autoSelect(Integer goodsId) {
+    public List<PositionSelect> autoSelect(Integer goodsId) {
         List<PositionSelect> positionSelectList = SlotMatchAlgorithm.hunter(false);
-        return iterator(positionSelectList);
+        return positionSelectList;
     }
 
     PositionSelect iterator(List<PositionSelect> positionSelectList) {

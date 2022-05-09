@@ -17,7 +17,7 @@ public class Position {
 
 	private Integer total;
 
-	private Integer index;
+	private Integer pindex;
 	
 	@Column(length=50)
 	private String code; // 商品编码
@@ -25,10 +25,6 @@ public class Position {
 	@Column(length=50)
 	private String name; // 商品名称
 	
-	@ManyToOne
-	@JoinColumn(name="typeId")
-	private GoodsType type; // 商品类别
-
 	public Integer getId() {
 		return id;
 	}
@@ -46,12 +42,12 @@ public class Position {
 		this.total = total;
 	}
 
-	public Integer getIndex() {
-		return index;
+	public Integer getPindex() {
+		return pindex;
 	}
 
-	public void setIndex(Integer index) {
-		this.index = index;
+	public void setPindex(Integer pindex) {
+		this.pindex = pindex;
 	}
 
 	public String getCode() {
@@ -70,11 +66,4 @@ public class Position {
 		this.name = name;
 	}
 
-	public GoodsType getType() {
-		return type;
-	}
-
-	public void setType(GoodsType type) {
-		this.type = type;
-	}
 }

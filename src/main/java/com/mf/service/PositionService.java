@@ -12,13 +12,6 @@ import java.util.List;
  */
 public interface PositionService {
 
-	/**
-	 * 查询某个类别下的所有货位信息
-	 * @param typeId
-	 * @return
-	 */
-	public List<Position> findByTypeId(int typeId);
-
 	Position findByIndex(int index);
 	
 	/**

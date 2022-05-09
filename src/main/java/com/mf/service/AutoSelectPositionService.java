@@ -2,9 +2,10 @@ package com.mf.service;
 
 import com.mf.vo.PositionSelect;
 
+import java.util.List;
 import java.util.Map;
 
 public interface AutoSelectPositionService {
 
-    PositionSelect autoSelect(Integer goodsId);
+    List<PositionSelect> autoSelect(Integer goodsId);
 }
