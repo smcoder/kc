@@ -70,17 +70,27 @@ public class PositionAdminController {
     @RequestMapping("/generate/{num}")
     @RequiresPermissions(value = {"货位管理"})
     public JSONArray generate(@PathVariable Integer num) {
-        List<Goods> goodsList = goodsService.all(num * num);
+        List<Goods> goodsList = goodsService.all(Integer.MAX_VALUE);
         String value = "[";
         for (int n = 1; n <= num; n++) {
             value += "{";
             for (int i = 1; i <= num; i++) {
                 value += "'" + i;
                 value += "':";
-                if (n * 1 > goodsList.size()) {
-                    value += "0,";
+                if (n > 1) {
+                    if (((n - 1) * num) + i >= goodsList.size()) {
+                        value += "0,";
+                    } else {
+                        value += goodsList.get(((n -1) * num) + i).getInventoryQuantity() + ",";
+
+                    }
                 } else {
-                    value += goodsList.get(n * i) + ",";
+                    if (n * i >= goodsList.size()) {
+                        value += "0,";
+                    } else {
+                        value += goodsList.get(n * i).getInventoryQuantity() + ",";
+
+                    }
                 }
             }
             value = value.substring(0, value.length() - 1);
@@ -91,10 +101,11 @@ public class PositionAdminController {
         return JSON.parseArray(refactor);
     }
 
-    @RequestMapping( "/calculate/{num}")
+    @RequestMapping("/calculate/{num}")
     public Integer calculate(@PathVariable Integer num) {
-        List<Goods> goodsList = goodsService.all(num);
-        SlotMatchAlgorithm.n = goodsList.size();
+        List<Goods> goodsList = goodsService.all(Integer.MAX_VALUE);
+        SlotMatchAlgorithm.n = num;
+        SlotMatchAlgorithm.max = num + 1;
         SlotMatchAlgorithm.initMatrix(goodsList);
         List<PositionSelect> list = autoSelectPositionService.autoSelect(null);
         if (null != list && list.size() > 0) {

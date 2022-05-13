@@ -30,8 +30,13 @@ public class SlotMatchAlgorithm {
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++) {
 //                s[i][j] = random.nextInt(n);
-                s[i][j] = (int)goodsList.get(i).getPurchasingPrice();
-                p[i][j] = s[i][j];
+                if (i >= goodsList.size()) {
+                    s[i][j] = 0;
+                    p[i][j] = s[i][j];
+                }  else {
+                    s[i][j] = (int) goodsList.get(i).getPurchasingPrice();
+                    p[i][j] = s[i][j];
+                }
             }
         //第一步：变出零来
         for (int i = 0; i < n; i++) {

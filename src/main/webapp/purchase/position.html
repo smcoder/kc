@@ -25,7 +25,10 @@
         }
 
         function calculate() {
-
+            var num = $("#s_name").val();
+            $.get("/admin/position/calculate/" + num, function (result) {
+                $("#calc_sum").val(result);
+            }, "json");
         }
 
         function generateTable(num) {
@@ -74,10 +77,11 @@
     </table>
     <div id="tb">
         <div>
-            &nbsp;货位数量：&nbsp;<input type="text" id="s_name" size="20" onkeydown="if(event.keyCode==13) searchGoods()"/>
+            &nbsp;货位数量：&nbsp;<input type="text" id="s_name" size="20"/>
             <a href="javascript:generate()" class="easyui-linkbutton" iconCls="icon-add"
                plain="true">生成</a>
             <a href="javascript:calculate()" class="easyui-linkbutton" iconCls="icon-edit" plain="true">计算</a>
+            <div style="float: right;">计算和：<input type="text" id="calc_sum" size="20" readonly/></div>
         </div>
     </div>
 </div>
