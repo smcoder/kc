@@ -32,7 +32,8 @@
                 return;
             }
             $.get("/admin/position/calculate/" + num + "/" + speed, function (result) {
-                $("#calc_sum").val(result);
+                $("#calc_sum").val(result.num);
+                $("#dg").datagrid('loadData', result.jsonArray);
             }, "json");
         }
 
