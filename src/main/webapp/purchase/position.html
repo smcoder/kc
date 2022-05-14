@@ -18,7 +18,7 @@
         function generate() {
             var value = $("#s_name").val();
             if (value <= 0) {
-                $.messager.alert("系统提示","货位数量比如大于0");
+                $.messager.alert("系统提示", "货位数量比如大于0");
                 return;
             }
             generateTable($("#s_name").val());
@@ -26,7 +26,12 @@
 
         function calculate() {
             var num = $("#s_name").val();
-            $.get("/admin/position/calculate/" + num, function (result) {
+            var speed = $("#speed").val();
+            if (null == num || null == speed || '' == num || '' == speed) {
+                $.messager.alert("系统提示", "货位数量与取货速度为必填项");
+                return;
+            }
+            $.get("/admin/position/calculate/" + num + "/" + speed, function (result) {
                 $("#calc_sum").val(result);
             }, "json");
         }
@@ -80,6 +85,7 @@
             &nbsp;货位数量：&nbsp;<input type="text" id="s_name" size="20"/>
             <a href="javascript:generate()" class="easyui-linkbutton" iconCls="icon-add"
                plain="true">生成</a>
+            取货速度：&nbsp;<input type="text" id="speed" size="20"/>
             <a href="javascript:calculate()" class="easyui-linkbutton" iconCls="icon-edit" plain="true">计算</a>
             <div style="float: right;">计算和：<input type="text" id="calc_sum" size="20" readonly/></div>
         </div>

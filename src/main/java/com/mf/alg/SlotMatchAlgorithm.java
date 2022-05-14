@@ -10,7 +10,7 @@ import java.util.*;
 public class SlotMatchAlgorithm {
 
     //define Max 100
-    public static int max = 100;
+    public static int max;
     public static int n;                    //维数
     public static int[][] s = new int[max][max];        //原始矩阵
     public static int[][] p = new int[max][max];        //归约矩阵
@@ -22,25 +22,34 @@ public class SlotMatchAlgorithm {
     public static Main_Node stack[] = new Main_Node[10000];
     public static int top = -1;
 
+    SlotMatchAlgorithm(int max) {
+        s = new int[max][max];
+        p = new int[max][max];
+        q = new int[max][max];
+        x = new int[max];
+        y = new int[max];
+    }
+
     //在规约矩阵里面0是0
     //-1φ,-2是◎(独立零元素)
     //三做完后如果返回可能要回退栈内的元素
     public static void initMatrix(List<Goods> goodsList) {
-        Random random = new Random();
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++) {
-//                s[i][j] = random.nextInt(n);
                 if (i >= goodsList.size()) {
                     s[i][j] = 0;
                     p[i][j] = s[i][j];
-                }  else {
-                    s[i][j] = (int) goodsList.get(i).getPurchasingPrice();
+                } else {
+                    s[i][j] = (int) goodsList.get(i).getInventoryQuantity();
                     p[i][j] = s[i][j];
                 }
             }
+    }
+
+    public static void changeMatrix(Integer speed) {
         //第一步：变出零来
         for (int i = 0; i < n; i++) {
-            int min = p[i][0];
+            int min = p[i][0] / speed;
             for (int j = 1; j < n; j++)
                 min = Math.min(min, p[i][j]);
             if (min != 0) {
@@ -50,7 +59,7 @@ public class SlotMatchAlgorithm {
         }
 
         for (int j = 0; j < n; j++) {
-            int min = p[0][j];
+            int min = p[0][j] / speed;
             for (int i = 1; i < n; i++)
                 min = Math.min(min, p[i][j]);
             if (min != 0) {
@@ -92,8 +101,6 @@ public class SlotMatchAlgorithm {
                     if (p[i][j] < 0) p[i][j] = 0;
             t = n;
         }
-
-
     }
 
     public static List<PositionSelect> hunter(boolean retry) {

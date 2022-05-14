@@ -9,6 +9,7 @@ import com.mf.entity.Goods;
 import com.mf.entity.Log;
 import com.mf.entity.Position;
 import com.mf.service.*;
+import com.mf.vo.HunterVO;
 import com.mf.vo.PositionSelect;
 import com.mf.vo.PositionTable;
 import org.apache.shiro.authz.annotation.Logical;
@@ -81,7 +82,7 @@ public class PositionAdminController {
                     if (((n - 1) * num) + i >= goodsList.size()) {
                         value += "0,";
                     } else {
-                        value += goodsList.get(((n -1) * num) + i).getInventoryQuantity() + ",";
+                        value += goodsList.get(((n - 1) * num) + i).getInventoryQuantity() + ",";
 
                     }
                 } else {
@@ -101,17 +102,38 @@ public class PositionAdminController {
         return JSON.parseArray(refactor);
     }
 
-    @RequestMapping("/calculate/{num}")
-    public Integer calculate(@PathVariable Integer num) {
+    @RequestMapping("/calculate/{num}/{speed}")
+    public HunterVO calculate(@PathVariable Integer num, @PathVariable Integer speed) {
+        HunterVO hunterVO = new HunterVO();
         List<Goods> goodsList = goodsService.all(Integer.MAX_VALUE);
         SlotMatchAlgorithm.n = num;
         SlotMatchAlgorithm.max = num + 1;
         SlotMatchAlgorithm.initMatrix(goodsList);
-        List<PositionSelect> list = autoSelectPositionService.autoSelect(null);
+        List<PositionSelect> list = autoSelectPositionService.autoSelect(speed);
         if (null != list && list.size() > 0) {
-            return list.stream().mapToInt(item -> item.getPositionIndex()).sum();
+            hunterVO.setSum(list.stream().mapToInt(item -> item.getPositionIndex()).sum());
+            int[][] matrix = SlotMatchAlgorithm.p;
+            hunterVO.setJsonArray(convert(matrix));
         }
-        return 0;
+        return hunterVO;
+    }
+
+    private JSONArray convert(int[][] matrix) {
+        int num = matrix.length;
+        String value = "[";
+        for (int n = 0; n < num; n++) {
+            value += "{";
+            for (int i = 0; i < matrix[n].length; i++) {
+                value += "'" + i;
+                value += "':";
+                value += matrix[n][i] + ",";
+            }
+            value = value.substring(0, value.length() - 1);
+            value += "},";
+        }
+        String refactor = value.substring(0, value.length() - 1);
+        refactor += "]";
+        return JSON.parseArray(refactor);
     }
 
 
