@@ -22,7 +22,7 @@ public class SlotMatchAlgorithm {
     public static Main_Node stack[] = new Main_Node[10000];
     public static int top = -1;
 
-    SlotMatchAlgorithm(int max) {
+    public SlotMatchAlgorithm(int max) {
         s = new int[max][max];
         p = new int[max][max];
         q = new int[max][max];

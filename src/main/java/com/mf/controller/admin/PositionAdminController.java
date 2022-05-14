@@ -82,14 +82,14 @@ public class PositionAdminController {
                     if (((n - 1) * num) + i >= goodsList.size()) {
                         value += "0,";
                     } else {
-                        value += goodsList.get(((n - 1) * num) + i).getInventoryQuantity() + ",";
+                        value += goodsList.get(((n - 1) * num) + i - 1).getInventoryQuantity() + ",";
 
                     }
                 } else {
                     if (n * i >= goodsList.size()) {
                         value += "0,";
                     } else {
-                        value += goodsList.get(n * i).getInventoryQuantity() + ",";
+                        value += goodsList.get(n * i - 1).getInventoryQuantity() + ",";
 
                     }
                 }
@@ -108,6 +108,7 @@ public class PositionAdminController {
         List<Goods> goodsList = goodsService.all(Integer.MAX_VALUE);
         SlotMatchAlgorithm.n = num;
         SlotMatchAlgorithm.max = num + 1;
+        SlotMatchAlgorithm slotMatchAlgorithm = new SlotMatchAlgorithm(num + 1);
         SlotMatchAlgorithm.initMatrix(goodsList);
         List<PositionSelect> list = autoSelectPositionService.autoSelect(speed);
         if (null != list && list.size() > 0) {
