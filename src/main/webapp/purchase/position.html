@@ -27,6 +27,7 @@
         function calculate() {
             var num = $("#s_name").val();
             var speed = $("#speed").val();
+            speed = 2;
             if (null == num || null == speed || '' == num || '' == speed) {
                 $.messager.alert("系统提示", "货位数量与取货速度为必填项");
                 return;
@@ -86,7 +87,7 @@
             &nbsp;货位数量：&nbsp;<input type="text" id="s_name" size="20"/>
             <a href="javascript:generate()" class="easyui-linkbutton" iconCls="icon-add"
                plain="true">生成</a>
-            取货速度：&nbsp;<input type="text" id="speed" size="20"/>
+<!--            取货速度：&nbsp;<input type="text" id="speed" size="20"/>-->
             <a href="javascript:calculate()" class="easyui-linkbutton" iconCls="icon-edit" plain="true">计算</a>
             <div style="float: right;">计算和：<input type="text" id="calc_sum" size="20" readonly/></div>
         </div>

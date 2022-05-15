@@ -40,7 +40,9 @@ public class SlotMatchAlgorithm {
                     s[i][j] = 0;
                     p[i][j] = s[i][j];
                 } else {
-                    s[i][j] = (int) goodsList.get(i).getInventoryQuantity();
+                    int pre = goodsList.get(i).getInventoryQuantity();
+                    int v = (int) (pre * Math.max((float)(n % n) * 1 / 2, (float)(n / n) * 1 / 2));
+                    s[i][j] = v;
                     p[i][j] = s[i][j];
                 }
             }
@@ -49,7 +51,7 @@ public class SlotMatchAlgorithm {
     public static void changeMatrix(Integer speed) {
         //第一步：变出零来
         for (int i = 0; i < n; i++) {
-            int min = p[i][0] / speed;
+            int min = p[i][0];
             for (int j = 1; j < n; j++)
                 min = Math.min(min, p[i][j]);
             if (min != 0) {
@@ -59,7 +61,7 @@ public class SlotMatchAlgorithm {
         }
 
         for (int j = 0; j < n; j++) {
-            int min = p[0][j] / speed;
+            int min = p[0][j];
             for (int i = 1; i < n; i++)
                 min = Math.min(min, p[i][j]);
             if (min != 0) {

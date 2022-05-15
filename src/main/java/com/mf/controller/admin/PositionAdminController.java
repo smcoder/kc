@@ -82,14 +82,18 @@ public class PositionAdminController {
                     if (((n - 1) * num) + i >= goodsList.size()) {
                         value += "0,";
                     } else {
-                        value += goodsList.get(((n - 1) * num) + i - 1).getInventoryQuantity() + ",";
-
+                        int pre = goodsList.get(n * i - 1).getInventoryQuantity();
+                        float v = pre * Math.max((float)(num % num) * 1 / 2, (float)(num / num) * 1 / 2);
+                        value += v + ",";
                     }
                 } else {
+
                     if (n * i >= goodsList.size()) {
-                        value += "0,";
+                        value += + 0 + ",";
                     } else {
-                        value += goodsList.get(n * i - 1).getInventoryQuantity() + ",";
+                        int pre = goodsList.get(n * i - 1).getInventoryQuantity();
+                        float v = pre * Math.max((float)(num % num) * 1 / 2, (float)(num / num) * 1 / 2);
+                        value += v + ",";
 
                     }
                 }
@@ -127,7 +131,13 @@ public class PositionAdminController {
             for (int i = 0; i < matrix[n].length; i++) {
                 value += "'" + i;
                 value += "':";
-                value += matrix[n][i] + ",";
+                if (matrix[n][i] == -1) {
+                    value += "0,";
+                } else if(matrix[n][i] == -2) {
+                    value += "1,";
+                } else {
+                    value += matrix[n][i] + ",";
+                }
             }
             value = value.substring(0, value.length() - 1);
             value += "},";
