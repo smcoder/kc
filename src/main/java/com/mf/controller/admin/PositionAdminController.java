@@ -82,17 +82,18 @@ public class PositionAdminController {
                     if (((n - 1) * num) + i >= goodsList.size()) {
                         value += "0,";
                     } else {
-                        int pre = goodsList.get(n * i - 1).getInventoryQuantity();
-                        float v = pre * Math.max((float)(num % num) * 1 / 2, (float)(num / num) * 1 / 2);
+                        int pre = goodsList.get(i - 1).getInventoryQuantity();
+                        double para = Math.sqrt(n * n + i * i) / 2;
+                        int v = (int) (pre * para);
                         value += v + ",";
                     }
                 } else {
-
                     if (n * i >= goodsList.size()) {
-                        value += + 0 + ",";
+                        value += 0 + ",";
                     } else {
-                        int pre = goodsList.get(n * i - 1).getInventoryQuantity();
-                        float v = pre * Math.max((float)(num % num) * 1 / 2, (float)(num / num) * 1 / 2);
+                        int pre = goodsList.get(i - 1).getInventoryQuantity();
+                        double para = Math.sqrt(n * n + i * i) / 2;
+                        int v = (int) (pre * para);
                         value += v + ",";
 
                     }
@@ -111,13 +112,20 @@ public class PositionAdminController {
         HunterVO hunterVO = new HunterVO();
         List<Goods> goodsList = goodsService.all(Integer.MAX_VALUE);
         SlotMatchAlgorithm.n = num;
-        SlotMatchAlgorithm.max = num + 1;
-        SlotMatchAlgorithm slotMatchAlgorithm = new SlotMatchAlgorithm(num + 1);
+        SlotMatchAlgorithm slotMatchAlgorithm = new SlotMatchAlgorithm(num);
         SlotMatchAlgorithm.initMatrix(goodsList);
         List<PositionSelect> list = autoSelectPositionService.autoSelect(speed);
         if (null != list && list.size() > 0) {
             hunterVO.setSum(list.stream().mapToInt(item -> item.getPositionIndex()).sum());
-            int[][] matrix = SlotMatchAlgorithm.p;
+            int[][] matrix = new int[4][4];
+            int[][] origin = SlotMatchAlgorithm.p;
+            for (int i = 1; i <= num; ++i)
+                for (int j = 1; j <= num; ++j)
+                    if (origin[i - 1][j - 1] == -2) {
+                        matrix[i - 1][j - 1] = 1;
+                    } else {
+                        matrix[i - 1][j - 1] = 0;
+                    }
             hunterVO.setJsonArray(convert(matrix));
         }
         return hunterVO;
@@ -126,18 +134,12 @@ public class PositionAdminController {
     private JSONArray convert(int[][] matrix) {
         int num = matrix.length;
         String value = "[";
-        for (int n = 0; n < num; n++) {
+        for (int n = 1; n <= num; n++) {
             value += "{";
-            for (int i = 0; i < matrix[n].length; i++) {
+            for (int i = 1; i <= num; i++) {
                 value += "'" + i;
                 value += "':";
-                if (matrix[n][i] == -1) {
-                    value += "0,";
-                } else if(matrix[n][i] == -2) {
-                    value += "1,";
-                } else {
-                    value += matrix[n][i] + ",";
-                }
+                value += matrix[n - 1][i - 1] + ",";
             }
             value = value.substring(0, value.length() - 1);
             value += "},";

@@ -36,14 +36,23 @@ public class SlotMatchAlgorithm {
     public static void initMatrix(List<Goods> goodsList) {
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++) {
-                if (i >= goodsList.size()) {
-                    s[i][j] = 0;
-                    p[i][j] = s[i][j];
-                } else {
-                    int pre = goodsList.get(i).getInventoryQuantity();
-                    int v = (int) (pre * Math.max((float)(n % n) * 1 / 2, (float)(n / n) * 1 / 2));
+                if (i >= 1) {
+                    int pre = goodsList.get(j).getInventoryQuantity();
+                    double para = Math.sqrt(i * i + j * j) / 2;
+                    int v = (int) (pre * para);
                     s[i][j] = v;
                     p[i][j] = s[i][j];
+                } else {
+                    if (i >= goodsList.size()) {
+                        s[i][j] = 0;
+                        p[i][j] = s[i][j];
+                    } else {
+                        int pre = goodsList.get(j).getInventoryQuantity();
+                        double para = Math.sqrt(i * i + j * j) / 2;
+                        int v = (int) (pre * para);
+                        s[i][j] = v;
+                        p[i][j] = s[i][j];
+                    }
                 }
             }
     }
