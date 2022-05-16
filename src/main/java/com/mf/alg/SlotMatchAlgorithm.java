@@ -34,11 +34,13 @@ public class SlotMatchAlgorithm {
     //-1φ,-2是◎(独立零元素)
     //三做完后如果返回可能要回退栈内的元素
     public static void initMatrix(List<Goods> goodsList) {
-        for (int i = 0; i < n; i++)
+        int calc = 1;
+        for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
+                double para = Math.sqrt(((calc - 1) % n + 1) + ((calc - 1) / n + 1)) / 2;
                 if (i >= 1) {
                     int pre = goodsList.get(j).getInventoryQuantity();
-                    double para = Math.sqrt(i * i + j * j) / 2;
+//                    double para = Math.sqrt(i * i + j * j) / 2;
                     int v = (int) (pre * para);
                     s[i][j] = v;
                     p[i][j] = s[i][j];
@@ -48,13 +50,15 @@ public class SlotMatchAlgorithm {
                         p[i][j] = s[i][j];
                     } else {
                         int pre = goodsList.get(j).getInventoryQuantity();
-                        double para = Math.sqrt(i * i + j * j) / 2;
+//                        double para = Math.sqrt(i * i + j * j) / 2;
                         int v = (int) (pre * para);
                         s[i][j] = v;
                         p[i][j] = s[i][j];
                     }
                 }
+                calc++;
             }
+        }
     }
 
     public static void changeMatrix(Integer speed) {

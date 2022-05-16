@@ -71,33 +71,37 @@ public class PositionAdminController {
     @RequestMapping("/generate/{num}")
     @RequiresPermissions(value = {"货位管理"})
     public JSONArray generate(@PathVariable Integer num) {
-        List<Goods> goodsList = goodsService.all(Integer.MAX_VALUE);
+        List<Goods> goodsList = goodsService.all(num);
         String value = "[";
+        int calc = 1;
+
         for (int n = 1; n <= num; n++) {
             value += "{";
             for (int i = 1; i <= num; i++) {
+                double xxx = Math.sqrt(((calc - 1) % num + 1) + ((calc - 1) / num + 1)) / 2;
                 value += "'" + i;
                 value += "':";
                 if (n > 1) {
-                    if (((n - 1) * num) + i >= goodsList.size()) {
+                    if (i - 1 >= goodsList.size()) {
                         value += "0,";
                     } else {
                         int pre = goodsList.get(i - 1).getInventoryQuantity();
-                        double para = Math.sqrt(n * n + i * i) / 2;
-                        int v = (int) (pre * para);
+//                        double para = Math.sqrt(n * n + i * i) / 2;
+                        int v = (int) (pre * xxx);
                         value += v + ",";
                     }
                 } else {
-                    if (n * i >= goodsList.size()) {
+                    if (i - 1 >= goodsList.size()) {
                         value += 0 + ",";
                     } else {
                         int pre = goodsList.get(i - 1).getInventoryQuantity();
-                        double para = Math.sqrt(n * n + i * i) / 2;
-                        int v = (int) (pre * para);
+//                        double para = Math.sqrt(n * n + i * i) / 2;
+                        int v = (int) (pre * xxx);
                         value += v + ",";
 
                     }
                 }
+                calc++;
             }
             value = value.substring(0, value.length() - 1);
             value += "},";
@@ -117,7 +121,7 @@ public class PositionAdminController {
         List<PositionSelect> list = autoSelectPositionService.autoSelect(speed);
         if (null != list && list.size() > 0) {
             hunterVO.setSum(list.stream().mapToInt(item -> item.getPositionIndex()).sum());
-            int[][] matrix = new int[4][4];
+            int[][] matrix = new int[num][num];
             int[][] origin = SlotMatchAlgorithm.p;
             for (int i = 1; i <= num; ++i)
                 for (int j = 1; j <= num; ++j)
