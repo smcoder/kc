@@ -12,6 +12,8 @@ public class Algothm {
     boolean[] rowcheck;
     boolean[] colcheck;
 
+    int total = 0;
+
     public Algothm(int value, List<Integer> quantityList) {
 
         initMatric(value, quantityList);
@@ -31,8 +33,7 @@ public class Algothm {
         for (int i = 0; i < n; i++) {
             int min = p[i][0];
             for (int j = 1; j < n; j++)
-                if (min > p[i][j])
-                    min = p[i][j];
+                if (min > p[i][j]) min = p[i][j];
             for (int j = 0; j < n; j++)
                 p[i][j] -= min;
         }
@@ -41,8 +42,7 @@ public class Algothm {
         for (int j = 0; j < n; j++) {
             int min = p[0][j];
             for (int i = 1; i < n; i++) {
-                if (min > p[i][j])
-                    min = p[i][j];
+                if (min > p[i][j]) min = p[i][j];
             }
             for (int i = 0; i < n; i++)
                 p[i][j] -= min;
@@ -67,8 +67,7 @@ public class Algothm {
             }
 
 
-            if (countsign() == n)
-                break;
+            if (countsign() == n) break;
 
             drawline();
             for (int i = 0; i < n; i++) {
@@ -87,12 +86,29 @@ public class Algothm {
             }
 
         }
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++) {
-                if (a[i][j] == -1)
+        //将所有画圈0改成1，其他元素改成0
+        for(int i = 0 ; i < n ; i++)
+            for(int j = 0 ; j < n ; j++) {
+                if(a[i][j] == -1) {
+                    total+= s[i][j];
                     s[i][j] = 1;
+                }
                 else
                     s[i][j] = 0;
+            }
+        System.out.println("最终矩阵:");
+        for(int i=0; i < n;i++) {
+            for(int j=0;j < n; j++)
+                System.out.print(s[i][j]+"  ");
+            System.out.println();
+        }
+        System.out.println("计算和为：" + total);
+
+
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++) {
+                if (a[i][j] == -1) s[i][j] = 1;
+                else s[i][j] = 0;
             }
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++)
@@ -112,7 +128,7 @@ public class Algothm {
 
         int[] row = new int[n];
         for (int i = 0; i < n; i++)
-            row[i] =quantityList.get(i);
+            row[i] = quantityList.get(i);
         System.out.println();
 
         coefficient();
@@ -149,8 +165,7 @@ public class Algothm {
                         if (a[i][j] == 0) {
                             a[i][j] = -1;
                             for (int k = 0; k < n; k++)
-                                if (a[k][j] == 0)
-                                    a[k][j] = -2;
+                                if (a[k][j] == 0) a[k][j] = -2;
                         }
                 }
             }
@@ -163,8 +178,7 @@ public class Algothm {
                         if (a[i][j] == 0) {
                             a[i][j] = -1;
                             for (int k = 0; k < n; k++)
-                                if (a[i][k] == 0)
-                                    a[i][k] = -2;
+                                if (a[i][k] == 0) a[i][k] = -2;
                         }
                     }
                 }
@@ -181,8 +195,7 @@ public class Algothm {
 
                 int f0 = 0;
                 for (int i = 0; i < n; i++)
-                    if (r0[i] != 0)
-                        f0 = 1;
+                    if (r0[i] != 0) f0 = 1;
 
                 if (f0 == 0) {
                     break;
@@ -191,8 +204,7 @@ public class Algothm {
                 int min = Integer.MAX_VALUE;
                 int minrow = 0;
                 for (int i = 0; i < n; i++) {
-                    if (r0[i] == 0)
-                        continue;
+                    if (r0[i] == 0) continue;
                     if (r0[i] < min) {
                         min = r0[i];
                         minrow = i;
@@ -210,8 +222,7 @@ public class Algothm {
                 a[minrow][mincol] = -1;
                 //ªÆµÙ¡–÷–µƒ0
                 for (int i = 0; i < n; i++)
-                    if (a[i][mincol] == 0)
-                        a[i][mincol] = -2;
+                    if (a[i][mincol] == 0) a[i][mincol] = -2;
                 for (int j = 0; j < n; j++)
                     if (a[minrow][j] == 0) {
                         a[minrow][j] = -2;
@@ -249,11 +260,10 @@ public class Algothm {
             for (int i = 0; i < n; i++) {
                 if (rowcheck[i]) {
                     for (int j = 0; j < n; j++) {
-                        if (a[i][j] == -2)
-                            if (colcheck[j] == false) {
-                                colcheck[j] = true;
-                                flag = true;
-                            }
+                        if (a[i][j] == -2) if (colcheck[j] == false) {
+                            colcheck[j] = true;
+                            flag = true;
+                        }
                     }
                 }
             }
@@ -261,11 +271,10 @@ public class Algothm {
             for (int j = 0; j < n; j++) {
                 if (colcheck[j]) {
                     for (int i = 0; i < n; i++)
-                        if (a[i][j] == -1)
-                            if (rowcheck[i] == false) {
-                                rowcheck[i] = true;
-                                flag = true;
-                            }
+                        if (a[i][j] == -1) if (rowcheck[i] == false) {
+                            rowcheck[i] = true;
+                            flag = true;
+                        }
                 }
             }
 
@@ -285,8 +294,7 @@ public class Algothm {
             if (rowcheck[i]) {
                 for (int j = 0; j < n; j++) {
                     if (!colcheck[j]) {
-                        if (p[i][j] < min)
-                            min = p[i][j];
+                        if (p[i][j] < min) min = p[i][j];
                     }
                 }
             }
@@ -313,8 +321,7 @@ public class Algothm {
         int num = 0;
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
-                if (a[i][j] == -1)
-                    num++;
+                if (a[i][j] == -1) num++;
         return num;
     }
 
@@ -322,8 +329,7 @@ public class Algothm {
     public int countrow(int x) {
         int num = 0;
         for (int j = 0; j < n; j++) {
-            if (a[x][j] == 0)
-                num++;
+            if (a[x][j] == 0) num++;
         }
         return num;
     }
@@ -331,8 +337,7 @@ public class Algothm {
     public int countcol(int y) {
         int num = 0;
         for (int i = 0; i < n; i++) {
-            if (a[i][y] == 0)
-                num++;
+            if (a[i][y] == 0) num++;
         }
         return num;
     }
@@ -356,17 +361,6 @@ public class Algothm {
     }
 
     public int sum() {
-        int total = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (a[i][j] == -1) {
-                    total += s[i][j];
-                    s[i][j] = 1;
-                } else {
-                    s[i][j] = 0;
-                }
-            }
-        }
         return total;
     }
 
