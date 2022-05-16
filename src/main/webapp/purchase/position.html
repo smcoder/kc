@@ -33,7 +33,7 @@
                 return;
             }
             $.get("/admin/position/calculate/" + num + "/" + speed, function (result) {
-                $("#calc_sum").val(result.num);
+                $("#calc_sum").val(result.sum);
                 $("#dg").datagrid('loadData', result.jsonArray);
             }, "json");
         }
@@ -41,13 +41,13 @@
         function generateTable(num) {
             $.get("/admin/position/generate/" + num, function (result) {
                 var data = [];
-                for (let i = 1; i <= num; i++) {
+                for (let i = 1; i <= result.list.length; i++) {
                     var obj = {};
-                    obj.columnName = i;
-                    obj.columnComments = "货物" + i;
+                    obj.columnName = result.list[i - 1];
+                    obj.columnComments = result.list[i - 1];
                     data.push(obj);
                 }
-                buildTitle(data, result);
+                buildTitle(data, result.jsonArray);
             }, "json");
         }
 
@@ -58,8 +58,7 @@
                 var rows = jsonStr;
                 var columns = new Array(), thead = "", options = {};
                 if (rows) {
-                    var w = 100 / rows.length;
-                    w = 100;
+                    let w = 100;
                     for (var i = 0; i < rows.length; i++) {
                         thead += "{field:'" + rows[i].columnName + "',title:'" + rows[i].columnComments + "',width:" + w + "}";
                         if (i < rows.length - 1) {
